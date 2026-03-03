@@ -1,4 +1,4 @@
-package com.example.wordleapp.ui
+package com.example.wordle.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater

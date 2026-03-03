@@ -1,4 +1,4 @@
-package com.example.wordlу.ui
+package com.example.wordle.ui
 
 import android.os.Bundle
 import android.text.Editable
