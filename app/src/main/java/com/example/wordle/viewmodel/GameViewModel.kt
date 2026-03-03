@@ -1,0 +1,121 @@
+package com.example.wordle.viewmodel
+import androidx.lifecycle.*
+import com.example.wordle.data.GameWords
+import com.example.wordle.data.Tile
+import com.example.wordle.data.TileColor
+
+class GameViewModel : ViewModel() {
+
+    private val _targetWord = MutableLiveData<String>()
+    val targetWord: LiveData<String> = _targetWord
+
+    private val _board = MutableLiveData<List<Tile>>(List(30) { Tile(' ', TileColor.GRAY) })
+    val board: LiveData<List<Tile>> = _board
+
+    private val _currentInput = MutableLiveData("")
+    val currentInput: LiveData<String> = _currentInput
+
+    private val _message = MutableLiveData("")
+    val message: LiveData<String> = _message
+
+    private val _gameOver = MutableLiveData(false)
+    val gameOver: LiveData<Boolean> = _gameOver
+
+    private val _isWin = MutableLiveData(false)
+    val isWin: LiveData<Boolean> = _isWin
+
+    private var attempt = 0
+    private val guesses = mutableListOf<List<Tile>>()
+
+    init { startNewGame() }
+
+    fun startNewGame() {
+        _targetWord.value = GameWords.words.random()
+        guesses.clear()
+        _currentInput.value = ""
+        attempt = 0
+        _gameOver.value = false
+        _isWin.value = false
+        _message.value = ""
+        rebuildBoard()
+    }
+
+    fun setCurrentInput(input: String) {
+        if (!_gameOver.value!! && input.length <= 5) {
+            _currentInput.value = input
+            rebuildBoard()
+        }
+    }
+
+    fun submitGuess() {
+        val guess = _currentInput.value!!.uppercase()
+        if (guess.length != 5) {
+            _message.value = "Введите слово из 5 букв!"
+            return
+        }
+
+        val target = _targetWord.value!!
+        val colors = evaluateGuess(guess, target)
+
+        val newRow = guess.mapIndexed { i, c -> Tile(c, colors[i]) }
+        guesses.add(newRow)
+        attempt++
+
+        if (guess == target) {
+            _gameOver.value = true
+            _isWin.value = true
+            _message.value = "Поздравляем! Вы угадали слово!"
+        } else if (attempt >= 6) {
+            _gameOver.value = true
+            _isWin.value = false
+            _message.value = "Вы проиграли. Загаданное слово: $target"
+        }
+
+        _currentInput.value = ""
+        rebuildBoard()
+    }
+
+    private fun evaluateGuess(guess: String, target: String): List<TileColor> {
+        val result = MutableList(5) { TileColor.GRAY }
+        val targetLetters = target.toMutableList()
+
+        // Зелёные
+        for (i in guess.indices) {
+            if (guess[i] == target[i]) {
+                result[i] = TileColor.GREEN
+                targetLetters[i] = ' '
+            }
+        }
+        // Жёлтые
+        for (i in guess.indices) {
+            if (result[i] == TileColor.GRAY) {
+                val idx = targetLetters.indexOf(guess[i])
+                if (idx != -1) {
+                    result[i] = TileColor.YELLOW
+                    targetLetters[idx] = ' '
+                }
+            }
+        }
+        return result
+    }
+
+    private fun rebuildBoard() {
+        val newBoard = MutableList(30) { Tile(' ', TileColor.GRAY) }
+
+        // Заполняем завершённые попытки
+        guesses.forEachIndexed { row, rowTiles ->
+            rowTiles.forEachIndexed { col, tile ->
+                newBoard[row * 5 + col] = tile
+            }
+        }
+
+        // Текущий ввод (серый)
+        val curr = _currentInput.value!!
+        val currentRow = guesses.size
+        curr.forEachIndexed { col, c ->
+            newBoard[currentRow * 5 + col] = Tile(c, TileColor.GRAY)
+        }
+
+        _board.value = newBoard
+    }
+}

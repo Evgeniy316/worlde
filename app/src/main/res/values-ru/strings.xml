@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Вордли</string>
+    <string name="home_title">Аналог Wordle</string>
+    <string name="start_game">Начать игру</string>
+    <string name="game_title">Угадайте слово</string>
+    <string name="instruction">Введите слово из 5 букв и нажмите «Проверить». У вас 6 попыток.</string>
+    <string name="guess_button">Проверить</string>
+    <string name="hint_input">Слово из 5 букв</string>
+    <string name="win_message">Поздравляем! Вы угадали слово!</string>
+    <string name="lose_message">Вы проиграли. Загаданное слово:</string>
+    <string name="new_game">Новая игра</string>
+    <string name="error_length">Слово должно состоять из 5 букв!</string>
+</resources>

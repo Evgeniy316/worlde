@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Wordle</string>
+    <string name="home_title">Wordle Analog</string>
+    <string name="start_game">Start Game</string>
+    <string name="game_title">Guess the word</string>
+    <string name="instruction">Enter a 5-letter word and press Check. You have 6 attempts.</string>
+    <string name="guess_button">Check</string>
+    <string name="hint_input">5-letter word</string>
+    <string name="win_message">Congratulations! You guessed the word!</string>
+    <string name="lose_message">You lost. The word was:</string>
+    <string name="new_game">New Game</string>
+    <string name="error_length">Word must be 5 letters!</string>
+</resources>
