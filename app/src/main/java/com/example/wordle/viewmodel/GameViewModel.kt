@@ -24,6 +24,9 @@ class GameViewModel : ViewModel() {
     private val _isWin = MutableLiveData(false)
     val isWin: LiveData<Boolean> = _isWin
 
+    private val _absentLetters = MutableLiveData<Set<Char>>(emptySet())
+    val absentLetters: LiveData<Set<Char>> = _absentLetters
+
     private var attempt = 0
     private val guesses = mutableListOf<List<Tile>>()
 
@@ -37,6 +40,7 @@ class GameViewModel : ViewModel() {
         _gameOver.value = false
         _isWin.value = false
         _message.value = ""
+        _absentLetters.value = emptySet()
         rebuildBoard()
     }
 
@@ -56,6 +60,7 @@ class GameViewModel : ViewModel() {
 
         val target = _targetWord.value!!
         val colors = evaluateGuess(guess, target)
+        updateAbsentLetters(guess, colors)
 
         val newRow = guess.mapIndexed { i, c -> Tile(c, colors[i]) }
         guesses.add(newRow)
@@ -117,5 +122,24 @@ class GameViewModel : ViewModel() {
         }
 
         _board.value = newBoard
+    }
+
+    private fun updateAbsentLetters(guess: String, colors: List<TileColor>) {
+        val absent = (_absentLetters.value ?: emptySet()).toMutableSet()
+
+        // Only mark a letter absent if it was GRAY in this guess AND
+        // it had no GREEN/YELLOW occurrence in the same guess.
+        val presentInThisGuess = mutableSetOf<Char>()
+        guess.forEachIndexed { i, c ->
+            if (colors[i] != TileColor.GRAY) presentInThisGuess.add(c)
+        }
+
+        guess.forEachIndexed { i, c ->
+            if (colors[i] == TileColor.GRAY && c !in presentInThisGuess) {
+                absent.add(c)
+            }
+        }
+
+        _absentLetters.value = absent
     }
 }
