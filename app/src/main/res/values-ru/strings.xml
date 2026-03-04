@@ -9,6 +9,9 @@
     <string name="hint_input">Слово из 5 букв</string>
     <string name="win_message">Поздравляем! Вы угадали слово!</string>
     <string name="lose_message">Вы проиграли. Загаданное слово:</string>
+    <string name="lose_message_with_word">Вы проиграли. Загаданное слово: %1$s</string>
     <string name="new_game">Новая игра</string>
     <string name="error_length">Слово должно состоять из 5 букв!</string>
+    <string name="keyboard_backspace">⌫</string>
+    <string name="keyboard_clear">Очистить</string>
 </resources>

@@ -16,6 +16,7 @@ import com.example.wordle.R
 import com.example.wordle.adapter.TileAdapter
 import com.example.wordle.databinding.FragmentGameBinding
 import com.example.wordle.viewmodel.GameViewModel
+import com.example.wordle.viewmodel.UiMessage
 import com.google.android.material.button.MaterialButton
 
 class GameFragment : Fragment() {
@@ -40,6 +41,8 @@ class GameFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentGameBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewModel
 
         // Скрываем обычное поле ввода — теперь используем виртуальную клавиатуру
         binding.etInput.visibility = View.GONE
@@ -58,18 +61,20 @@ class GameFragment : Fragment() {
             updateKeyboardEnabledState(input)
         }
 
-        viewModel.message.observe(viewLifecycleOwner) { msg ->
-            if (msg.isNotEmpty()) {
-                binding.tvMessage.text = msg
-                Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
-            }
+        viewModel.gameOver.observe(viewLifecycleOwner) {
+            updateKeyboardEnabledState(viewModel.currentInput.value ?: "")
         }
 
-        viewModel.gameOver.observe(viewLifecycleOwner) { isOver ->
-            binding.btnGuess.isEnabled = !isOver
-            binding.btnNewGame.visibility = if (isOver) View.VISIBLE else View.GONE
-            binding.keyboardLayout.visibility = if (isOver) View.GONE else View.VISIBLE
-            updateKeyboardEnabledState(viewModel.currentInput.value ?: "")
+        viewModel.message.observe(viewLifecycleOwner) { msg ->
+            if (msg == null) {
+                binding.tvMessage.text = ""
+                return@observe
+            }
+
+            val text = messageToText(msg)
+            binding.tvMessage.text = text
+            Toast.makeText(requireContext(), text, Toast.LENGTH_LONG).show()
+            viewModel.clearMessage()
         }
 
         setupKeyboard()
@@ -82,7 +87,7 @@ class GameFragment : Fragment() {
         // Кнопка Новая игра
         binding.btnNewGame.setOnClickListener {
             viewModel.startNewGame()
-            binding.tvMessage.text = ""
+            viewModel.clearMessage()
         }
 
         return binding.root
@@ -124,14 +129,14 @@ class GameFragment : Fragment() {
 
     private fun addActionButtons(layout: LinearLayout) {
         val backspaceButton = MaterialButton(requireContext()).apply {
-            text = "⌫"
+            text = getString(R.string.keyboard_backspace)
             textSize = 16f
             setTextColor(Color.WHITE)
             setOnClickListener { onBackspaceClicked() }
         }
 
         val clearButton = MaterialButton(requireContext()).apply {
-            text = "Очистить"
+            text = getString(R.string.keyboard_clear)
             textSize = 16f
             setTextColor(Color.WHITE)
             setOnClickListener { onClearClicked() }
@@ -200,6 +205,14 @@ class GameFragment : Fragment() {
     private fun tintButton(button: MaterialButton, colorRes: Int) {
         val color = ContextCompat.getColor(requireContext(), colorRes)
         button.backgroundTintList = ColorStateList.valueOf(color)
+    }
+
+    private fun messageToText(msg: UiMessage): String {
+        return if (msg.arg == null) {
+            getString(msg.resId)
+        } else {
+            getString(msg.resId, msg.arg)
+        }
     }
 
     override fun onDestroyView() {

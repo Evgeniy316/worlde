@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.wordle.ui.HomeFragment"
-        android:label="HomeFragment" >
+        android:label="@string/home_title" >
 
         <!-- Переход в игру -->
         <action
@@ -20,6 +20,6 @@
     <fragment
         android:id="@+id/gameFragment"
         android:name="com.example.wordle.ui.GameFragment"
-        android:label="GameFragment" />
+        android:label="@string/game_title" />
 
 </navigation>

@@ -1,5 +1,6 @@
 package com.example.wordle.viewmodel
 import androidx.lifecycle.*
+import com.example.wordle.R
 import com.example.wordle.data.GameWords
 import com.example.wordle.data.Tile
 import com.example.wordle.data.TileColor
@@ -15,8 +16,8 @@ class GameViewModel : ViewModel() {
     private val _currentInput = MutableLiveData("")
     val currentInput: LiveData<String> = _currentInput
 
-    private val _message = MutableLiveData("")
-    val message: LiveData<String> = _message
+    private val _message = MutableLiveData<UiMessage?>(null)
+    val message: LiveData<UiMessage?> = _message
 
     private val _gameOver = MutableLiveData(false)
     val gameOver: LiveData<Boolean> = _gameOver
@@ -39,7 +40,7 @@ class GameViewModel : ViewModel() {
         attempt = 0
         _gameOver.value = false
         _isWin.value = false
-        _message.value = ""
+        _message.value = null
         _absentLetters.value = emptySet()
         rebuildBoard()
     }
@@ -47,14 +48,19 @@ class GameViewModel : ViewModel() {
     fun setCurrentInput(input: String) {
         if (!_gameOver.value!! && input.length <= 5) {
             _currentInput.value = input
+            _message.value = null
             rebuildBoard()
         }
+    }
+
+    fun clearMessage() {
+        _message.value = null
     }
 
     fun submitGuess() {
         val guess = _currentInput.value!!.uppercase()
         if (guess.length != 5) {
-            _message.value = "Введите слово из 5 букв!"
+            _message.value = UiMessage(R.string.error_length)
             return
         }
 
@@ -69,11 +75,11 @@ class GameViewModel : ViewModel() {
         if (guess == target) {
             _gameOver.value = true
             _isWin.value = true
-            _message.value = "Поздравляем! Вы угадали слово!"
+            _message.value = UiMessage(R.string.win_message)
         } else if (attempt >= 6) {
             _gameOver.value = true
             _isWin.value = false
-            _message.value = "Вы проиграли. Загаданное слово: $target"
+            _message.value = UiMessage(R.string.lose_message_with_word, target)
         }
 
         _currentInput.value = ""

@@ -8,6 +8,9 @@
     <string name="hint_input">5-letter word</string>
     <string name="win_message">Congratulations! You guessed the word!</string>
     <string name="lose_message">You lost. The word was:</string>
+    <string name="lose_message_with_word">You lost. The word was: %1$s</string>
     <string name="new_game">New Game</string>
     <string name="error_length">Word must be 5 letters!</string>
+    <string name="keyboard_backspace">⌫</string>
+    <string name="keyboard_clear">Clear</string>
 </resources>
