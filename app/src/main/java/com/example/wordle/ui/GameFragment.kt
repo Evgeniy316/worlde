@@ -31,7 +31,7 @@ class GameFragment : Fragment() {
     private val actionButtons = mutableListOf<MaterialButton>()
 
     // Ряды русской клавиатуры
-    private val row1 = "ЙЦУКЕНГШЩЗ"
+    private val row1 = "ЙЦУКЕНГШЩЗХЪ"
     private val row2 = "ФЫВАПРОЛДЖЭ"
     private val row3 = "ЯЧСМИТЬБЮ"
 
