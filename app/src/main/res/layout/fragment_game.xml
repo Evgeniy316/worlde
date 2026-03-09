@@ -52,7 +52,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Скрытое поле ввода оставляем на случай будущего использования -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_input_layout"
             android:layout_width="0dp"
@@ -78,7 +77,6 @@
                 android:inputType="textCapCharacters|textNoSuggestions" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Виртуальная клавиатура для русских букв (внизу экрана) -->
         <LinearLayout
             android:id="@+id/keyboard_layout"
             android:layout_width="0dp"

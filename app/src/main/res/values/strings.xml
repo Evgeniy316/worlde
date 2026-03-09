@@ -13,4 +13,7 @@
     <string name="error_length">Word must be 5 letters!</string>
     <string name="keyboard_backspace">⌫</string>
     <string name="keyboard_clear">Clear</string>
+    <string name="row1">ЙЦУКЕНГШЩЗХЪ</string>
+    <string name="row2">ФЫВАПРОЛДЖЭ</string>
+    <string name="row3">ЯЧСМИТЬБЮ</string>
 </resources>

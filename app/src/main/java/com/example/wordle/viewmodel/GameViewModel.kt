@@ -90,14 +90,12 @@ class GameViewModel : ViewModel() {
         val result = MutableList(5) { TileColor.GRAY }
         val targetLetters = target.toMutableList()
 
-        // Зелёные
         for (i in guess.indices) {
             if (guess[i] == target[i]) {
                 result[i] = TileColor.GREEN
                 targetLetters[i] = ' '
             }
         }
-        // Жёлтые
         for (i in guess.indices) {
             if (result[i] == TileColor.GRAY) {
                 val idx = targetLetters.indexOf(guess[i])
@@ -113,14 +111,12 @@ class GameViewModel : ViewModel() {
     private fun rebuildBoard() {
         val newBoard = MutableList(30) { Tile(' ', TileColor.GRAY) }
 
-        // Заполняем завершённые попытки
         guesses.forEachIndexed { row, rowTiles ->
             rowTiles.forEachIndexed { col, tile ->
                 newBoard[row * 5 + col] = tile
             }
         }
 
-        // Текущий ввод (серый)
         val curr = _currentInput.value!!
         val currentRow = guesses.size
         curr.forEachIndexed { col, c ->
@@ -133,8 +129,6 @@ class GameViewModel : ViewModel() {
     private fun updateAbsentLetters(guess: String, colors: List<TileColor>) {
         val absent = (_absentLetters.value ?: emptySet()).toMutableSet()
 
-        // Only mark a letter absent if it was GRAY in this guess AND
-        // it had no GREEN/YELLOW occurrence in the same guess.
         val presentInThisGuess = mutableSetOf<Char>()
         guess.forEachIndexed { i, c ->
             if (colors[i] != TileColor.GRAY) presentInThisGuess.add(c)

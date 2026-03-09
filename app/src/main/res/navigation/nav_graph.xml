@@ -4,19 +4,16 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/homeFragment">
 
-    <!-- Главный экран (Home) -->
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.wordle.ui.HomeFragment"
         android:label="@string/home_title" >
 
-        <!-- Переход в игру -->
         <action
             android:id="@+id/action_homeFragment_to_gameFragment"
             app:destination="@id/gameFragment" />
     </fragment>
 
-    <!-- Игровой экран -->
     <fragment
         android:id="@+id/gameFragment"
         android:name="com.example.wordle.ui.GameFragment"

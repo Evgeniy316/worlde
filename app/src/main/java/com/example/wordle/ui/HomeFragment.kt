@@ -26,11 +26,9 @@ class HomeFragment : Fragment() {
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-        // Кнопка "Начать игру"
         binding.btnStart.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_gameFragment)
         }
-
         return binding.root
     }
 

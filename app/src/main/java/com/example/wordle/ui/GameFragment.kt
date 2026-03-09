@@ -30,10 +30,9 @@ class GameFragment : Fragment() {
     private val letterButtons = mutableMapOf<Char, MaterialButton>()
     private val actionButtons = mutableListOf<MaterialButton>()
 
-    // Ряды русской клавиатуры
-    private val row1 = "ЙЦУКЕНГШЩЗХЪ"
-    private val row2 = "ФЫВАПРОЛДЖЭ"
-    private val row3 = "ЯЧСМИТЬБЮ"
+    private val row1 by lazy { getString(R.string.row1) }
+    private val row2 by lazy { getString(R.string.row2) }
+    private val row3 by lazy { getString(R.string.row3) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,10 +43,8 @@ class GameFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
-        // Скрываем обычное поле ввода — теперь используем виртуальную клавиатуру
         binding.etInput.visibility = View.GONE
 
-        // RecyclerView
         binding.rvBoard.layoutManager = GridLayoutManager(requireContext(), 5)
         binding.rvBoard.adapter = adapter
 
@@ -79,12 +76,10 @@ class GameFragment : Fragment() {
 
         setupKeyboard()
 
-        // Кнопка Проверить
         binding.btnGuess.setOnClickListener {
             viewModel.submitGuess()
         }
 
-        // Кнопка Новая игра
         binding.btnNewGame.setOnClickListener {
             viewModel.startNewGame()
             viewModel.clearMessage()
@@ -104,7 +99,6 @@ class GameFragment : Fragment() {
             addLetterButtons(letters, layout)
         }
 
-        // Кнопки действий: удалить последнюю букву и очистить строку
         val actionsLayout = binding.keyboardRowActions
         addActionButtons(actionsLayout)
     }
